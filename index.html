@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ubicatex – Propiedades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-400: #22c88a; --green-500: #1aad77; --green-600: #13895c;
+      --bg-base: #0e0f11; --bg-surface: #161719; --bg-card: #1c1e21;
+      --bg-hover: #222428; --bg-input: #1a1c1f;
+      --text-primary: #f0f0ee; --text-secondary: #9a9a94; --text-muted: #5a5a55;
+      --border: rgba(255,255,255,0.07); --border-md: rgba(255,255,255,0.12); --border-lg: rgba(255,255,255,0.18);
+      --amber-400: #f0a040; --blue-400: #5ba3e8;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.4); --shadow-md: 0 4px 20px rgba(0,0,0,0.5); --shadow-lg: 0 16px 48px rgba(0,0,0,0.65);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg-base); color: var(--text-primary); min-height: 100vh; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+    .site-header { background: rgba(14,15,17,0.88); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: var(--green-400); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-icon svg { width: 20px; height: 20px; fill: #0e0f11; }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--text-primary); letter-spacing: -0.3px; }
+    .logo-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; }
+    .hero { background: linear-gradient(135deg, #0a1a12 0%, #0f2a1c 40%, #0e1f16 100%); padding: 2.5rem 1.5rem 2rem; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c88a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+    .hero-glow { position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 500px; height: 200px; background: radial-gradient(ellipse, rgba(34,200,138,0.12) 0%, transparent 70%); pointer-events: none; }
+    .hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--text-primary); margin-bottom: 0.4rem; position: relative; }
+    .hero h2 span { color: var(--green-400); }
+    .hero p { color: var(--text-secondary); font-size: 0.95rem; max-width: 440px; margin: 0 auto; position: relative; }
+    .main-wrapper { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+    .filters { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-md); background: var(--bg-card); font-size: 13px; cursor: pointer; color: var(--text-secondary); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .filter-btn:hover { border-color: var(--green-400); color: var(--green-400); }
+    .filter-btn.active { background: var(--green-400); border-color: var(--green-400); color: #0e0f11; font-weight: 600; }
+    .props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    @media (max-width: 900px) { .props-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .props-grid { grid-template-columns: 1fr; } }
+
+    /* TARJETA — imagen + título solamente */
+    .prop-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; cursor: pointer; user-select: none; }
+    .prop-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--border-md); }
+    .prop-card.selected { border-color: var(--green-400); border-width: 1.5px; box-shadow: 0 0 0 3px rgba(34,200,138,0.10), var(--shadow-md); }
+    .prop-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+    .prop-img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.82); transition: filter 0.3s, transform 0.4s; }
+    .prop-card:hover .prop-img { filter: brightness(0.95); transform: scale(1.04); }
+    .prop-badge { position: absolute; top: 10px; left: 10px; background: rgba(14,15,17,0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 3px 9px; font-size: 11px; font-weight: 600; color: var(--green-400); backdrop-filter: blur(4px); pointer-events: none; }
+    .prop-badge.casa { color: var(--amber-400); }
+    .prop-badge.terreno { color: #c8a822; }
+    .prop-check { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; background: var(--green-400); border-radius: 50%; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(34,200,138,0.4); pointer-events: none; }
+    .prop-check svg { width: 14px; height: 14px; stroke: #0e0f11; }
+    .prop-card.selected .prop-check { display: flex; }
+    .prop-title-bar { padding: 0.7rem 1rem 0.8rem; }
+    .prop-name { font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.35; }
+
+    .consultar-bar { margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .consultar-info { font-size: 13px; color: var(--text-muted); transition: color 0.2s; }
+    .consultar-info.active { color: var(--text-secondary); }
+    .consultar-btn { padding: 14px 48px; background: rgba(255,255,255,0.06); border: 1.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: not-allowed; transition: all 0.25s; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 8px; letter-spacing: 0.2px; }
+    .consultar-btn svg { width: 18px; height: 18px; opacity: 0.4; transition: opacity 0.2s; }
+    .consultar-btn.active { background: var(--green-400); border-color: var(--green-400); color: #0e0f11; cursor: pointer; box-shadow: 0 6px 28px rgba(34,200,138,0.28); }
+    .consultar-btn.active:hover { background: var(--green-500); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(34,200,138,0.36); }
+    .consultar-btn.active svg { opacity: 1; }
+    .consultar-panel { max-width: 620px; width: 100%; margin: 1.5rem auto 0; background: var(--bg-card); border: 1px solid var(--border-md); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; display: none; }
+    .consultar-panel.open { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+    .panel-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: rgba(34,200,138,0.04); }
+    .panel-head h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+    .panel-head p { font-size: 13px; color: var(--text-secondary); }
+    .panel-sel { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+    .panel-sel-title { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .panel-sel-items { display: flex; flex-direction: column; gap: 4px; }
+    .panel-sel-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+    .panel-sel-name { color: var(--text-primary); font-weight: 500; }
+    .panel-sel-price { color: var(--green-400); font-weight: 600; white-space: nowrap; margin-left: 8px; }
+    .panel-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+    .panel-total-num { font-size: 20px; color: var(--green-400); }
+    .panel-reserva { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; font-size: 13px; color: var(--text-muted); }
+    .panel-reserva-num { font-size: 16px; font-weight: 700; color: var(--amber-400); }
+    .qr-section { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1.75rem; background: linear-gradient(135deg, rgba(34,200,138,0.03) 0%, rgba(0,0,0,0.15) 100%); }
+    @media (max-width: 560px) { .qr-section { flex-direction: column; align-items: center; } }
+    .qr-3d-scene { perspective: 600px; flex-shrink: 0; }
+    .qr-3d-card { width: 148px; height: 148px; transform-style: preserve-3d; transform: rotateX(8deg) rotateY(-10deg); transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); border-radius: 14px; position: relative; cursor: pointer; text-decoration: none; display: block; }
+    .qr-3d-card:hover { transform: rotateX(0deg) rotateY(0deg) scale(1.06); }
+    .qr-3d-front { position: absolute; inset: 0; background: #ffffff; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 3px rgba(34,200,138,0.35), 8px 16px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.9); backface-visibility: hidden; }
+    .qr-3d-front img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 14px; }
+    .qr-3d-front::after { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 40%, transparent 60%); pointer-events: none; transition: opacity 0.3s; }
+    .qr-3d-card:hover .qr-3d-front::after { opacity: 0; }
+    .qr-3d-right { position: absolute; top: 8px; right: -10px; bottom: 8px; width: 10px; background: linear-gradient(to right, rgba(34,200,138,0.5), rgba(34,200,138,0.15)); border-radius: 0 6px 6px 0; transform: rotateY(90deg) translateX(5px); transform-origin: left center; }
+    .qr-3d-bottom { position: absolute; left: 8px; right: 8px; bottom: -10px; height: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.1)); border-radius: 0 0 6px 6px; transform: rotateX(-90deg) translateY(5px); transform-origin: top center; }
+    .qr-3d-glow { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 120px; height: 20px; background: radial-gradient(ellipse, rgba(34,200,138,0.35) 0%, transparent 70%); filter: blur(6px); pointer-events: none; }
+    @keyframes qrPulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(34,200,138,0.35), 8px 16px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.9); }
+      50%       { box-shadow: 0 0 0 5px rgba(34,200,138,0.55), 8px 16px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.9); }
+    }
+    .qr-3d-front { animation: qrPulse 3s ease-in-out infinite; }
+    .qr-3d-card:hover .qr-3d-front { animation: none; }
+    .qr-tap-badge { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--green-400); white-space: nowrap; display: flex; align-items: center; gap: 3px; }
+    .qr-tap-badge svg { width: 10px; height: 10px; }
+    .qr-details { flex: 1; }
+    .qr-amount-dyn { font-size: 22px; font-weight: 700; color: var(--green-400); margin-top: 0.5rem; }
+    .qr-amount-dyn small { font-size: 12px; color: var(--text-muted); font-weight: 400; display: block; }
+    .panel-form { padding: 1.25rem 1.5rem 1.5rem; }
+    .panel-form h4 { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 0.9rem; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-md); border-radius: var(--radius-sm); font-size: 14px; color: var(--text-primary); background: var(--bg-input); font-family: 'DM Sans', sans-serif; transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-muted); }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--green-400); box-shadow: 0 0 0 3px rgba(34,200,138,0.10); }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .tel-wrap { display: flex; }
+    .country-select-wrap { position: relative; flex-shrink: 0; }
+    .country-trigger { height: 100%; padding: 10px 10px; background: var(--bg-input); border: 1px solid var(--border-md); border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: var(--text-primary); font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: border-color 0.15s; min-width: 86px; }
+    .country-trigger:hover { border-color: var(--green-400); }
+    .country-trigger .flag { font-size: 16px; line-height: 1; }
+    .country-trigger .dial { font-size: 12px; color: var(--text-secondary); }
+    .country-trigger .caret { font-size: 9px; color: var(--text-muted); margin-left: auto; }
+    .country-dropdown { position: absolute; top: calc(100% + 4px); left: 0; z-index: 100; background: var(--bg-card); border: 1px solid var(--border-md); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 220px; overflow-y: auto; min-width: 230px; display: none; }
+    .country-dropdown.open { display: block; animation: slideDown 0.2s ease; }
+    .country-search { padding: 8px 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-card); }
+    .country-search input { width: 100%; padding: 6px 10px; border: 1px solid var(--border-md); border-radius: 6px; font-size: 13px; color: var(--text-primary); background: var(--bg-input); font-family: 'DM Sans', sans-serif; outline: none; }
+    .country-search input:focus { border-color: var(--green-400); }
+    .country-opt { padding: 8px 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; transition: background 0.1s; }
+    .country-opt:hover { background: var(--bg-hover); }
+    .country-opt.selected { background: rgba(34,200,138,0.08); color: var(--green-400); }
+    .country-opt .flag { font-size: 16px; }
+    .country-opt .name { flex: 1; color: var(--text-primary); }
+    .country-opt .code { color: var(--text-muted); font-size: 12px; }
+    .tel-input-inner { flex: 1; padding: 10px 12px; border: 1px solid var(--border-md); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 14px; color: var(--text-primary); background: var(--bg-input); font-family: 'DM Sans', sans-serif; transition: border-color 0.15s, box-shadow 0.15s; outline: none; width: 100%; }
+    .tel-input-inner::placeholder { color: var(--text-muted); }
+    .tel-input-inner:focus { border-color: var(--green-400); box-shadow: 0 0 0 3px rgba(34,200,138,0.10); }
+    .tel-wrap:focus-within .country-trigger { border-color: var(--green-400); }
+    .comprobante-group { border: 1.5px dashed var(--border-md); border-radius: var(--radius-sm); padding: 1rem; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; margin-bottom: 0.9rem; background: rgba(0,0,0,0.15); }
+    .comprobante-group:hover { border-color: var(--green-400); background: rgba(34,200,138,0.03); }
+    .comprobante-group.has-file { border-color: var(--green-400); background: rgba(34,200,138,0.05); border-style: solid; }
+    .comprobante-group label { cursor: pointer; font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .comprobante-group label svg { width: 24px; height: 24px; opacity: 0.5; }
+    .comprobante-group.has-file label { color: var(--green-400); }
+    .comprobante-group input[type=file] { display: none; }
+    .file-preview { margin-top: 6px; max-width: 120px; max-height: 80px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(34,200,138,0.3); display: none; }
+    .file-preview.show { display: block; margin: 6px auto 0; }
+    .submit-btn { width: 100%; padding: 13px; background: var(--green-400); border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 700; cursor: pointer; color: #0e0f11; font-family: 'DM Sans', sans-serif; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 1.25rem; }
+    .submit-btn:hover:not(:disabled) { background: var(--green-500); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(34,200,138,0.3); }
+    .submit-btn:disabled { background: rgba(255,255,255,0.07); color: var(--text-muted); cursor: not-allowed; }
+    .submit-btn svg { width: 16px; height: 16px; }
+    .success-panel { padding: 2rem 1.5rem; text-align: center; display: none; }
+    .success-panel.show { display: block; animation: slideDown 0.3s ease; }
+    .success-icon { width: 64px; height: 64px; background: rgba(34,200,138,0.12); border: 1px solid rgba(34,200,138,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .success-icon svg { width: 30px; height: 30px; stroke: var(--green-400); }
+    .success-panel h2 { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
+    .success-panel p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 380px; margin: 0 auto; }
+    .success-props { background: rgba(34,200,138,0.07); border: 1px solid rgba(34,200,138,0.15); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin: 1rem auto; font-size: 13px; color: var(--green-400); font-weight: 500; max-width: 380px; text-align: left; }
+    .success-close { margin-top: 1.25rem; padding: 10px 32px; background: var(--green-400); border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 700; color: #0e0f11; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .success-close:hover { background: var(--green-500); }
+    .notice { background: rgba(91,163,232,0.08); border: 1px solid rgba(91,163,232,0.2); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; color: var(--blue-400); display: flex; gap: 8px; align-items: flex-start; margin-bottom: 1rem; }
+    .notice svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: rgba(34,200,138,0.15); border: 1px solid rgba(34,200,138,0.3); color: var(--green-400); padding: 9px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.25s, transform 0.25s; white-space: nowrap; backdrop-filter: blur(8px); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .no-props { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">UBICATEX</div>
+        <div class="logo-sub">La Paz, Bolivia</div>
+      </div>
+    </a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <h2>INMOBILIARIA <span>UBICATEX</span></h2>
+  <p>Seleccioná las propiedades de tu interés y coordiná tu visita</p>
+</div>
+
+<div class="main-wrapper">
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('Terreno', this)">Terrenos</button>
+    <button class="filter-btn" onclick="setFilter('Departamento', this)">Departamentos</button>
+    <button class="filter-btn" onclick="setFilter('Casa', this)">Casas</button>
+  </div>
+
+  <div class="props-grid" id="propsList"></div>
+
+  <div class="consultar-bar">
+    <div class="consultar-info" id="consultarInfo">Seleccioná al menos una propiedad para continuar</div>
+    <button class="consultar-btn" id="consultarBtn" onclick="togglePanel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      Consultar propiedades seleccionadas
+    </button>
+  </div>
+
+  <div class="consultar-panel" id="consultarPanel">
+    <div id="formView">
+      <div class="panel-head">
+        <h3>Solicitud de visita</h3>
+        <p>Completá tus datos y envianos el comprobante de reserva</p>
+      </div>
+
+      <div class="panel-sel">
+        <div class="panel-sel-title">Propiedades seleccionadas</div>
+        <div class="panel-sel-items" id="panelSelItems"></div>
+        <div class="panel-total">
+          <span>Propiedades</span>
+          <span class="panel-total-num" id="panelTotalCant">0</span>
+        </div>
+        <div class="panel-reserva">
+          <span>Monto de reserva (Bs. <span id="montoPorProp">5</span> c/u)</span>
+          <span class="panel-reserva-num" id="panelTotalBs">Bs. 0</span>
+        </div>
+      </div>
+
+      <div class="qr-section">
+        <div style="position:relative; flex-shrink:0;">
+          <div class="qr-3d-scene">
+            <a class="qr-3d-card" id="qr3dCard"
+               href="https://www.dropbox.com/scl/fi/h6uuorcq6hm74x5b7jl7t/QR-final.jpg?rlkey=0kb64fqfuf4uo6xvprg6k6ivx&st=kz49070c&raw=1"
+               target="_blank" rel="noopener noreferrer" title="Clic para ver el QR en tamaño completo">
+              <div class="qr-3d-front">
+                <img src="https://www.dropbox.com/scl/fi/h6uuorcq6hm74x5b7jl7t/QR-final.jpg?rlkey=0kb64fqfuf4uo6xvprg6k6ivx&st=kz49070c&raw=1" alt="QR de pago Ubicatex" loading="lazy" />
+              </div>
+              <div class="qr-3d-right"></div>
+              <div class="qr-3d-bottom"></div>
+            </a>
+          </div>
+          <div class="qr-3d-glow"></div>
+          <div class="qr-tap-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Clic para ampliar
+          </div>
+        </div>
+        <div class="qr-details">
+          <div class="qr-amount-dyn" id="qrMontoDyn">
+            Bs. 0
+            <small id="qrMontoDetalle">seleccioná propiedades</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-form">
+        <div class="notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Realizá el depósito de reserva, adjuntá el comprobante y completá tus datos. Te contactaremos para confirmar la visita.
+        </div>
+
+        <h4>Tus datos de contacto</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre completo *</label>
+            <input type="text" id="fNombre" placeholder="Ej: Juan Quispe" />
+          </div>
+          <div class="form-group">
+            <label>Celular / WhatsApp *</label>
+            <div class="tel-wrap">
+              <div class="country-select-wrap">
+                <div class="country-trigger" id="countryTrigger" onclick="toggleCountryDropdown()">
+                  <span class="flag" id="selectedFlag">🇧🇴</span>
+                  <span class="dial" id="selectedDial">+591</span>
+                  <span class="caret">▼</span>
+                </div>
+                <div class="country-dropdown" id="countryDropdown">
+                  <div class="country-search">
+                    <input type="text" id="countrySearch" placeholder="Buscar país..." oninput="filterCountries(this.value)" />
+                  </div>
+                  <div id="countryList"></div>
+                </div>
+              </div>
+              <input class="tel-input-inner" type="tel" id="fTel" placeholder="70000000" />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="fEmail" placeholder="correo@ejemplo.com" />
+        </div>
+        <div class="form-group">
+          <label>Mensaje / Consulta</label>
+          <textarea id="fMsg" placeholder="¿Alguna pregunta sobre las propiedades?"></textarea>
+        </div>
+
+        <div class="comprobante-group" id="comprobanteGroup" onclick="document.getElementById('fComprobante').click()">
+          <label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span id="comprobanteLabel">Adjuntar comprobante (JPG, PNG, WEBP, HEIC, GIF, BMP, TIFF, PDF…)</span>
+          </label>
+          <input type="file" id="fComprobante" accept="image/*,.pdf,.heic,.heif,.tiff,.tif,.bmp,.webp" onchange="handleFileChange(this)" />
+          <img id="filePreviewImg" class="file-preview" alt="Vista previa" />
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="enviarFormulario()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Enviar consulta
+        </button>
+      </div>
+    </div>
+
+    <div class="success-panel" id="successView">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2 id="successTitle">¡Consulta enviada!</h2>
+      <p id="successMsg">Recibimos tu solicitud. Te contactaremos en las próximas horas.</p>
+      <div class="success-props" id="successProps"></div>
+      <button class="success-close" onclick="closePanel()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmCsIqxTUs2nptvQtTRxeQHFYijqxyf6q-5bSEd4uFlltbrMyfX-5QdgNIa0wBjTRhSw/exec";
+  const RESERVA_POR_PROP = 5;
+
+  const PAISES = [
+    { code:"BO", dial:"+591",  flag:"🇧🇴", name:"Bolivia" },
+    { code:"AR", dial:"+54",   flag:"🇦🇷", name:"Argentina" },
+    { code:"CL", dial:"+56",   flag:"🇨🇱", name:"Chile" },
+    { code:"PE", dial:"+51",   flag:"🇵🇪", name:"Perú" },
+    { code:"BR", dial:"+55",   flag:"🇧🇷", name:"Brasil" },
+    { code:"UY", dial:"+598",  flag:"🇺🇾", name:"Uruguay" },
+    { code:"PY", dial:"+595",  flag:"🇵🇾", name:"Paraguay" },
+    { code:"EC", dial:"+593",  flag:"🇪🇨", name:"Ecuador" },
+    { code:"CO", dial:"+57",   flag:"🇨🇴", name:"Colombia" },
+    { code:"VE", dial:"+58",   flag:"🇻🇪", name:"Venezuela" },
+    { code:"MX", dial:"+52",   flag:"🇲🇽", name:"México" },
+    { code:"US", dial:"+1",    flag:"🇺🇸", name:"Estados Unidos" },
+    { code:"ES", dial:"+34",   flag:"🇪🇸", name:"España" },
+    { code:"PA", dial:"+507",  flag:"🇵🇦", name:"Panamá" },
+    { code:"CR", dial:"+506",  flag:"🇨🇷", name:"Costa Rica" },
+    { code:"GT", dial:"+502",  flag:"🇬🇹", name:"Guatemala" },
+    { code:"CU", dial:"+53",   flag:"🇨🇺", name:"Cuba" },
+    { code:"DO", dial:"+1809", flag:"🇩🇴", name:"Rep. Dominicana" },
+    { code:"IT", dial:"+39",   flag:"🇮🇹", name:"Italia" },
+    { code:"DE", dial:"+49",   flag:"🇩🇪", name:"Alemania" },
+    { code:"FR", dial:"+33",   flag:"🇫🇷", name:"Francia" },
+    { code:"GB", dial:"+44",   flag:"🇬🇧", name:"Reino Unido" },
+    { code:"PT", dial:"+351",  flag:"🇵🇹", name:"Portugal" },
+    { code:"CA", dial:"+1",    flag:"🇨🇦", name:"Canadá" },
+    { code:"AU", dial:"+61",   flag:"🇦🇺", name:"Australia" },
+    { code:"JP", dial:"+81",   flag:"🇯🇵", name:"Japón" },
+    { code:"CN", dial:"+86",   flag:"🇨🇳", name:"China" },
+  ];
+  let selectedCountry = PAISES[0];
+
+  function renderCountryList(filtro) {
+    const lista = document.getElementById("countryList");
+    const items = filtro
+      ? PAISES.filter(p => p.name.toLowerCase().includes(filtro.toLowerCase()) || p.dial.includes(filtro))
+      : PAISES;
+    lista.innerHTML = items.map(p => `
+      <div class="country-opt ${p.code === selectedCountry.code ? 'selected' : ''}" onclick="selectCountry('${p.code}')">
+        <span class="flag">${p.flag}</span><span class="name">${p.name}</span><span class="code">${p.dial}</span>
+      </div>`).join("") || '<div style="padding:10px 12px;color:var(--text-muted);font-size:13px;">Sin resultados</div>';
+  }
+  function selectCountry(code) {
+    selectedCountry = PAISES.find(p => p.code === code) || PAISES[0];
+    document.getElementById("selectedFlag").textContent = selectedCountry.flag;
+    document.getElementById("selectedDial").textContent = selectedCountry.dial;
+    toggleCountryDropdown(false);
+    document.getElementById("fTel").focus();
+  }
+  function toggleCountryDropdown(force) {
+    const dd = document.getElementById("countryDropdown");
+    const open = force !== undefined ? force : !dd.classList.contains("open");
+    dd.classList.toggle("open", open);
+    if (open) { renderCountryList(""); document.getElementById("countrySearch").value = ""; setTimeout(() => document.getElementById("countrySearch").focus(), 50); }
+  }
+  function filterCountries(val) { renderCountryList(val); }
+  document.addEventListener("click", function(e) {
+    const wrap = document.getElementById("countryDropdown");
+    const trigger = document.getElementById("countryTrigger");
+    if (wrap && !wrap.contains(e.target) && !trigger.contains(e.target)) wrap.classList.remove("open");
+  });
+
+  const propiedades = [
+    { id:1, nombre:"Terreno en Zona Señor de Lagunas", tipo:"Terreno", modalidad:"venta", ubicacion:"El Alto, La Paz", precio:56000, img:"https://scontent.flpb1-2.fna.fbcdn.net/v/t39.30808-6/708573348_122127763761231850_1133934109522630196_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=110&ccb=1-7&_nc_sid=454cf4&_nc_ohc=YG0jeK6Md0cQ7kNvwG3HTzo&_nc_oc=AdpmnX92yKyXOW7NzVA1EHyWN5CXRs14g61Jx1C94oo2Dfn7wnwUWncP1VFnTLEfvri66C2zMeIIDWZ-1gNRTaYF&_nc_zt=23&_nc_ht=scontent.flpb1-2.fna&_nc_gid=I3PN99vWqXxrUoBJwp_xBQ&_nc_ss=782a8&oh=00_Af9ntlZ0DAPfFCVbal42T2AzifNnY0UiNYOthZqJfNL2_Q&oe=6A2157D8", amurallado:true, servicios:["agua","luz","alcantarillado"], m2:250 },
+    { id:2, nombre:"Departamento en Av. Costanera", tipo:"Departamento", modalidad:"alquiler", ubicacion:"Av. Costanera, La Paz", precio:2000, img:"https://scontent.flpb1-2.fna.fbcdn.net/v/t45.5328-4/707591721_742386705597714_8979326669175551376_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=247b10&_nc_ohc=SCP85HzMdXAQ7kNvwEim3VT&_nc_oc=AdoqHdZ1jpqQpOR7BxXJkNDqZiJhnKec7plFKN6sJffuBdC0LWmbNr2C8cougcl-NmbLxqXZcJh3qhYler5S66XV&_nc_zt=23&_nc_ht=scontent.flpb1-2.fna&_nc_gid=4S2ei_M5EgtjM0WlYUkYbw&_nc_ss=782a8&oh=00_Af-28b8cb1J7dUpzEJeCryt5MjAOAiBBeDVfSxIgVnC0XQ&oe=6A219657", habitaciones:2, banos:1, m2:220 },
+    { id:3, nombre:"Terreno en Zona Irpavi 2", tipo:"Terreno", modalidad:"venta", ubicacion:"Irpavi, La Paz", precio:60000, img:"https://scontent.flpb1-2.fna.fbcdn.net/v/t39.30808-6/699997075_4409841465912552_8539901500418180153_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=454cf4&_nc_ohc=3Xfd60lhMnsQ7kNvwGZPgAi&_nc_oc=AdrXssVUFzVV75A4nGT9eyqhp-KAlgNmpiIJjF-myI2Ls3rNWNJVTBHLKCq3dyf5LD5zJmxS4cB0rUNYnwtvtLss&_nc_zt=23&_nc_ht=scontent.flpb1-2.fna&_nc_gid=YY4D9kkoyE265pvV_nedMw&_nc_ss=782a8&oh=00_Af9fVTHvpoic-5DL-g-Zx9Py5BCQsJwTefPME3XcRTqLuA&oe=6A21695D", amurallado:true, servicios:["agua","luz","alcantarillado"], m2:305 },
+    { id:4, nombre:"Casa en Sopocachi", tipo:"Casa", modalidad:"venta", ubicacion:"Sopocachi, La Paz", precio:320000, img:"https://scontent.flpb1-2.fna.fbcdn.net/v/t39.30808-6/707739935_122207773046378848_4047038160333913524_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=454cf4&_nc_ohc=ERp-IMcNYDAQ7kNvwEFIUJV&_nc_oc=AdqSqh5Qit2IlQHS93AW7iRdehjipWJtDfft2PdU5qCDRu2FAF_1dNxIBwN4Cj5t18VUJC4k1pOkZWFDxJwnBgji&_nc_zt=23&_nc_ht=scontent.flpb1-2.fna&_nc_gid=APEm9iHRw89dB1hkKDJ_XA&_nc_ss=782a8&oh=00_Af_O4oS9-Ayk_q2u597fTlzEwbxqq5A-9c0v0ST_TZbLhg&oe=6A218B8A", habitaciones:5, banos:2, m2:155 },
+    { id:5, nombre:"Departamento meseta Villa Concepción", tipo:"Departamento", modalidad:"alquiler", ubicacion:"Achumani, La Paz", precio:1600, img:"https://scontent.flpb1-1.fna.fbcdn.net/v/t39.30808-6/707815959_3223971104454210_429881870508818151_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=454cf4&_nc_ohc=-w9ygO1ibmEQ7kNvwGD5-Wl&_nc_oc=Adr5XdOQ5wMT1QhZ7yYTB4605DysDTaLmE_zMUdxuZt352fcWTvjfODx76q1pP35IkhmHdWue0fes-LF4OVLB1G9&_nc_zt=23&_nc_ht=scontent.flpb1-1.fna&_nc_gid=4mVJdwS3x3npcvLcKF8m5A&_nc_ss=782a8&oh=00_Af9V-WpEEl1E-HkSke_gMv9sRA8nEB4j_WyPg7m4DjXmHw&oe=6A21A1D1", habitaciones:2, banos:1, m2:72 },
+    { id:6, nombre:"Casa en Alto Obrajes", tipo:"Casa", modalidad:"venta", ubicacion:"Obrajes, La Paz", precio:280000, img:"https://scontent.flpb1-1.fna.fbcdn.net/v/t39.84726-6/708276916_1535029561626942_2359004557919360213_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=92e707&_nc_ohc=GPCeqZCrPFAQ7kNvwHu33mz&_nc_oc=Adrn8C2FuHt5H5fzZOaQ9LsPQFC_6wysqo24DVT_thpu-h6sGEiEYNpuvmPcMRzUR1k4n3asK4snG3Xx8bjfdWo0&_nc_zt=14&_nc_ht=scontent.flpb1-1.fna&_nc_gid=tnX36-NevbBLrCeL-LslDQ&_nc_ss=782a8&oh=00_Af-6nxXwlBDA1SBn1IxQrkvOQ-_hI6V4Tg613N4IrqQvGA&oe=6A21A093", habitaciones:4, banos:3, m2:323 }
+  ];
+
+  let seleccionadosOrden = [];
+  let filtroActivo = "todos";
+  let panelAbierto = false;
+  let nroReservaFinal = "–";
+
+  document.addEventListener("mousemove", function(e) {
+    const card = document.getElementById("qr3dCard");
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const dx = (e.clientX - rect.left - rect.width/2) / window.innerWidth;
+    const dy = (e.clientY - rect.top  - rect.height/2) / window.innerHeight;
+    card.style.transform = `rotateX(${-dy*18}deg) rotateY(${dx*18}deg)`;
+  });
+  document.addEventListener("mouseleave", function() {
+    const card = document.getElementById("qr3dCard");
+    if (card) card.style.transform = "rotateX(8deg) rotateY(-10deg)";
+  });
+
+  function estaSeleccionado(id) { return seleccionadosOrden.includes(id); }
+  function getSeleccionadas() {
+    return seleccionadosOrden.map(id => propiedades.find(p => p.id === id)).filter(Boolean);
+  }
+  function badgeClass(tipo) { return tipo === "Casa" ? "casa" : tipo === "Terreno" ? "terreno" : ""; }
+
+  function renderCards() {
+    const lista = document.getElementById("propsList");
+    const filtradas = filtroActivo === "todos" ? propiedades : propiedades.filter(p => p.tipo === filtroActivo);
+    if (!filtradas.length) { lista.innerHTML = `<div class="no-props">No hay propiedades para este filtro.</div>`; return; }
+    lista.innerHTML = filtradas.map(p => {
+      const sel = estaSeleccionado(p.id);
+      return `
+      <div class="prop-card ${sel ? "selected" : ""}" id="card-${p.id}" onclick="toggleSeleccion(${p.id})">
+        <div class="prop-img-wrap">
+          <img class="prop-img" src="${p.img}" alt="${p.nombre}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=60'" />
+          <span class="prop-badge ${badgeClass(p.tipo)}">${p.tipo}</span>
+          <div class="prop-check" style="${sel ? 'display:flex' : 'display:none'}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="prop-title-bar">
+          <div class="prop-name">${p.nombre}</div>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function toggleSeleccion(id) {
+    const idx = seleccionadosOrden.indexOf(id);
+    if (idx !== -1) {
+      seleccionadosOrden.splice(idx, 1);
+      mostrarToast("Propiedad quitada");
+    } else {
+      seleccionadosOrden.push(id);
+      mostrarToast("Propiedad añadida ✓");
+    }
+    actualizarCard(id);
+    actualizarConsultarBtn();
+    if (panelAbierto) actualizarPanel();
+  }
+
+  function actualizarCard(id) {
+    const card = document.getElementById("card-" + id);
+    if (!card) return;
+    const sel = estaSeleccionado(id);
+    card.classList.toggle("selected", sel);
+    const check = card.querySelector(".prop-check");
+    if (check) check.style.display = sel ? "flex" : "none";
+  }
+
+  function actualizarConsultarBtn() {
+    const btn  = document.getElementById("consultarBtn");
+    const info = document.getElementById("consultarInfo");
+    const n    = seleccionadosOrden.length;
+    if (n > 0) {
+      btn.classList.add("active"); btn.removeAttribute("disabled");
+      info.classList.add("active");
+      info.textContent = `${n} propiedad${n > 1 ? "es" : ""} seleccionada${n > 1 ? "s" : ""} – hacé clic para consultar`;
+    } else {
+      btn.classList.remove("active"); btn.setAttribute("disabled", "true");
+      info.classList.remove("active");
+      info.textContent = "Seleccioná al menos una propiedad para continuar";
+      if (panelAbierto) closePanel();
+    }
+  }
+
+  function actualizarPanel() {
+    const sel   = getSeleccionadas();
+    const n     = sel.length;
+    const total = n * RESERVA_POR_PROP;
+    document.getElementById("panelSelItems").innerHTML = sel.map((p, i) => `
+      <div class="panel-sel-row">
+        <span class="panel-sel-name">
+          <em style="font-size:10px;color:var(--text-muted);font-style:normal;margin-right:4px;">${i+1}.</em>
+          ${p.nombre}
+          <em style="font-size:11px;color:var(--text-muted);font-style:normal;margin-left:3px;">(${p.tipo})</em>
+        </span>
+        <span class="panel-sel-price">${p.modalidad === "alquiler" ? `Bs. ${p.precio.toLocaleString("es-BO")}/mes` : `Bs. ${p.precio.toLocaleString("es-BO")}`}</span>
+      </div>`).join("");
+    document.getElementById("panelTotalCant").textContent = `${n} propiedad${n !== 1 ? "es" : ""}`;
+    document.getElementById("montoPorProp").textContent   = RESERVA_POR_PROP;
+    document.getElementById("panelTotalBs").textContent   = `Bs. ${total}`;
+    document.getElementById("qrMontoDyn").childNodes[0].textContent = `Bs. ${total} `;
+    document.getElementById("qrMontoDetalle").textContent = n > 0 ? `${n} propiedad${n !== 1 ? "es" : ""} × Bs. ${RESERVA_POR_PROP}` : "seleccioná propiedades";
+  }
+
+  function togglePanel() { if (seleccionadosOrden.length === 0) return; panelAbierto ? closePanel() : openPanel(); }
+
+  function openPanel() {
+    panelAbierto = true;
+    const panel = document.getElementById("consultarPanel");
+    panel.classList.add("open");
+    document.getElementById("formView").style.display = "block";
+    document.getElementById("successView").classList.remove("show");
+    actualizarPanel();
+    setTimeout(() => panel.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+  }
+
+  function closePanel() {
+    panelAbierto = false;
+    document.getElementById("consultarPanel").classList.remove("open");
+  }
+
+  function setFilter(tipo, btn) {
+    filtroActivo = tipo;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderCards();
+  }
+
+  function handleFileChange(input) {
+    const group   = document.getElementById("comprobanteGroup");
+    const label   = document.getElementById("comprobanteLabel");
+    const preview = document.getElementById("filePreviewImg");
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      group.classList.add("has-file");
+      label.textContent = "✓ " + file.name + " (" + (file.size / 1024).toFixed(0) + " KB)";
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => { preview.src = e.target.result; preview.classList.add("show"); };
+        reader.readAsDataURL(file);
+      } else { preview.classList.remove("show"); }
+    } else {
+      group.classList.remove("has-file");
+      label.textContent = "Adjuntar comprobante (JPG, PNG, WEBP, HEIC, GIF, BMP, TIFF, PDF…)";
+      preview.classList.remove("show");
+    }
+  }
+
+  async function enviarFormulario() {
+    const nombre   = document.getElementById("fNombre").value.trim();
+    const telRaw   = document.getElementById("fTel").value.trim();
+    const dialCode = document.getElementById("selectedDial").textContent.trim();
+    const email    = document.getElementById("fEmail").value.trim();
+    const msg      = document.getElementById("fMsg").value.trim();
+
+    if (!nombre || !telRaw) { mostrarToast("⚠ Completá nombre y celular"); return; }
+
+    const telefonoCompleto = dialCode + telRaw;
+    const telefonoNumerico = dialCode.replace("+","") + telRaw;
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-3.36"/></svg> Enviando...`;
+
+    const sel = getSeleccionadas();
+
+    let comprobanteBase64 = "", comprobanteName = "", comprobanteMime = "";
+    const fileInput = document.getElementById("fComprobante");
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      comprobanteName = file.name;
+      comprobanteMime = file.type || detectarMimePorExtension(file.name);
+      comprobanteBase64 = await new Promise(res => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(",")[1]);
+        r.readAsDataURL(file);
+      });
+    }
+
+    const payload = {
+      nombre,
+      telefono:              telefonoCompleto,
+      telefono_numerico:     telefonoNumerico,
+      email,
+      mensaje:               msg,
+      propiedades:           sel.map(p => p.nombre).join(", "),
+      cantidad_seleccionada: sel.length,
+      total_reserva_bs:      sel.length * RESERVA_POR_PROP,
+      detalle:               sel.map(p => `${p.nombre} (${p.tipo}, ${p.modalidad}) – Bs. ${p.precio}`).join(" | "),
+      propiedades_data:      JSON.stringify(sel.map(p => ({
+        id:         p.id,
+        nombre:     p.nombre,
+        tipo:       p.tipo,
+        modalidad:  p.modalidad,
+        ubicacion:  p.ubicacion,
+        precio:     p.precio,
+        img:        p.img,
+        m2:         p.m2 || null,
+        habitaciones: p.habitaciones || null,
+        banos:      p.banos || null,
+        amurallado: p.amurallado || null,
+        servicios:  p.servicios || null
+      }))),
+      comprobante_base64:    comprobanteBase64,
+      comprobante_nombre:    comprobanteName,
+      comprobante_mime:      comprobanteMime
+    };
+
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "text/plain" },
+        body:    JSON.stringify(payload)
+      });
+      const result = await resp.json();
+      if (result && result.ref) { nroReservaFinal = result.ref; }
+    } catch (err) {
+      console.warn("[Ubicatex] Reintentando en no-cors:", err);
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST", mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err2) {
+        console.error("[Ubicatex] Error al enviar:", err2);
+      }
+    }
+
+    document.getElementById("formView").style.display = "none";
+    const sv = document.getElementById("successView");
+    sv.classList.add("show");
+    document.getElementById("successTitle").textContent = `¡Consulta enviada, ${nombre.split(" ")[0]}!`;
+    document.getElementById("successMsg").textContent   = "Registramos tu solicitud. En las próximas horas te contactaremos por WhatsApp para confirmar la visita.";
+    document.getElementById("successProps").innerHTML   =
+      sel.map((p, i) => `📍 ${i+1}. ${p.nombre}`).join("<br>") +
+      `<br><br>🔢 N° de reserva: <strong>${nroReservaFinal}</strong>`;
+    sv.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function detectarMimePorExtension(nombre) {
+    const ext = (nombre.split(".").pop() || "").toLowerCase();
+    const mapa = { jpg:"image/jpeg", jpeg:"image/jpeg", png:"image/png", gif:"image/gif", webp:"image/webp", bmp:"image/bmp", tif:"image/tiff", tiff:"image/tiff", heic:"image/heic", heif:"image/heif", pdf:"application/pdf" };
+    return mapa[ext] || "application/octet-stream";
+  }
+
+  function mostrarToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  (function() {
+    document.getElementById("montoPorProp").textContent = RESERVA_POR_PROP;
+    console.log("[Ubicatex] App iniciada");
+  })();
+
+  renderCards();
+  actualizarConsultarBtn();
+</script>
+</body>
+</html>
